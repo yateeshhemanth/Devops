@@ -1,0 +1,90 @@
+---
+- name: Prepare KVM hypervisor hosts
+  hosts: kvm_hosts
+  become: true
+  tasks:
+    - name: Install required hypervisor packages
+      apt:
+        name:
+          - qemu-kvm
+          - libvirt-daemon-system
+          - libvirt-clients
+          - bridge-utils
+        state: present
+        update_cache: true
+
+    - name: Ensure libvirtd is running
+      systemd:
+        name: libvirtd
+        state: started
+        enabled: true
+
+- name: Deploy dashboard server on .160
+  hosts: dashboard
+  become: true
+  vars:
+    release_archive: /tmp/kvm-platform.tar.gz
+    install_dir: /opt/kvm-platform
+  tasks:
+    - name: Install dashboard packages
+      apt:
+        name:
+          - nginx
+          - curl
+        state: present
+        update_cache: true
+
+    - name: Create install + config directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ install_dir }}"
+        - "{{ install_dir }}/config"
+
+    - name: Upload release archive
+      copy:
+        src: "{{ release_archive }}"
+        dest: /tmp/kvm-platform.tar.gz
+
+    - name: Upload KVM hosts inventory
+      copy:
+        src: ../hosts.json
+        dest: "{{ install_dir }}/config/hosts.json"
+
+    - name: Extract release
+      unarchive:
+        src: /tmp/kvm-platform.tar.gz
+        dest: "{{ install_dir }}"
+        remote_src: true
+        extra_opts: [--strip-components=1]
+
+    - name: Install systemd service
+      copy:
+        src: ../systemd/kvm-platform.service
+        dest: /etc/systemd/system/kvm-platform.service
+
+    - name: Install nginx config
+      copy:
+        src: ../nginx/kvm-platform.conf
+        dest: /etc/nginx/sites-available/kvm-platform.conf
+
+    - name: Enable nginx site
+      file:
+        src: /etc/nginx/sites-available/kvm-platform.conf
+        dest: /etc/nginx/sites-enabled/kvm-platform.conf
+        state: link
+        force: true
+
+    - name: Reload systemd and start platform
+      systemd:
+        daemon_reload: true
+        name: kvm-platform
+        state: started
+        enabled: true
+
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: true
