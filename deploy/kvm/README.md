@@ -58,3 +58,7 @@ Use `deploy/kvm/ansible/site.yml` with your inventory to configure hosts end-to-
 Topology template is prefilled in:
 - `deploy/kvm/ansible/inventory.ini`
 - `deploy/kvm/hosts.json`
+
+
+## Runbook
+For a full end-to-end deployment with `.160` dashboard and `.153/.154` KVM hosts, see `DEPLOYMENT_RUNBOOK.md` in repo root.

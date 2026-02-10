@@ -103,6 +103,9 @@ When auth is enabled (`API_KEYS`), pass `X-API-Key` in all API requests.
 
 ## Deploy to KVM environment
 
+For exact command-by-command steps for your topology, see **`DEPLOYMENT_RUNBOOK.md`**.
+
+
 Recommended topology for your case:
 - `192.168.1.160` = dashboard/API server
 - `192.168.1.153` = KVM host 1
@@ -143,6 +146,7 @@ Follow `deploy/kvm/README.md`:
 Use Ansible playbook:
 - `deploy/kvm/ansible/site.yml`
 - edit `deploy/kvm/hosts.json` to list your real host IPs
+- runbook reference: `DEPLOYMENT_RUNBOOK.md`
 
 ---
 
