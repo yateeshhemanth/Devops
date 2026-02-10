@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kvm-platform
+    env: docker
+    plan: starter
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: STATIC_DIR
+        value: /srv/web
