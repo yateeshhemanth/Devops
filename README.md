@@ -11,6 +11,13 @@ This repo includes:
 
 ## Features
 
+Production baseline included now:
+- API key auth + RBAC (viewer/operator/admin)
+- readiness endpoint (`/readyz`)
+- request ID + audit logs + panic recovery
+- per-IP rate limiting
+- graceful shutdown on SIGTERM/SIGINT
+
 ### Day-2 operations
 - VM power actions: start/stop/reboot/pause
 - VM snapshot and migration
@@ -89,6 +96,8 @@ Base URL: `http://localhost:8080`
 - `POST /api/v1/hosts/{id}/maintenance` `{ "enabled": true }`
 
 See: `API.md`.
+
+When auth is enabled (`API_KEYS`), pass `X-API-Key` in all API requests.
 
 ---
 

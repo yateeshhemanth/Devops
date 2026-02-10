@@ -9,6 +9,7 @@ WorkingDirectory=/opt/kvm-platform
 Environment=PORT=8080
 Environment=STATIC_DIR=/opt/kvm-platform/web
 Environment=HOSTS_FILE=/opt/kvm-platform/config/hosts.json
+EnvironmentFile=-/opt/kvm-platform/.env
 ExecStart=/opt/kvm-platform/bin/kvm-api
 Restart=always
 RestartSec=3

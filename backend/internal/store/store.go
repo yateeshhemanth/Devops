@@ -97,6 +97,9 @@ func (s *Store) MigrateVM(vmID, host string) (model.VM, error) {
 	if !ok {
 		return model.VM{}, fmt.Errorf("vm %s not found", vmID)
 	}
+	if !s.hostExists(host) {
+		return model.VM{}, fmt.Errorf("target host %s not found", host)
+	}
 	vm.Status = model.VMMigrating
 	vm.Host = host
 	s.vms[vmID] = vm
@@ -155,4 +158,13 @@ func mapValues[T any](m map[string]T) []T {
 		res = append(res, v)
 	}
 	return res
+}
+
+func (s *Store) hostExists(host string) bool {
+	for _, h := range s.hosts {
+		if h.ID == host || h.Name == host || h.Address == host {
+			return true
+		}
+	}
+	return false
 }

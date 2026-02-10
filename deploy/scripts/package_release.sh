@@ -24,6 +24,7 @@ cat > "$PKG_DIR/.env.example" <<ENV
 PORT=8080
 STATIC_DIR=/opt/kvm-platform/web
 HOSTS_FILE=/opt/kvm-platform/config/hosts.json
+API_KEYS=viewer-token:viewer,ops-token:operator,admin-token:admin
 ENV
 
 tar -C "$DIST_DIR" -czf "$DIST_DIR/kvm-platform-${VERSION}.tar.gz" "kvm-platform-${VERSION}"
