@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+packages:
+  - qemu-kvm
+  - libvirt-daemon-system
+  - libvirt-clients
+  - virtinst
+  - nginx
+  - curl
+  - tar
+
+runcmd:
+  - systemctl enable --now libvirtd
+  - usermod -aG libvirt ubuntu
+  - echo "KVM node bootstrap complete"

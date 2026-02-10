@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -11,10 +13,11 @@ import (
 )
 
 type Server struct {
-	store *store.Store
+	store     *store.Store
+	staticDir string
 }
 
-func New(s *store.Store) *Server { return &Server{store: s} }
+func New(s *store.Store, staticDir string) *Server { return &Server{store: s, staticDir: staticDir} }
 
 func (s *Server) Router() http.Handler {
 	mux := http.NewServeMux()
@@ -23,6 +26,9 @@ func (s *Server) Router() http.Handler {
 	mux.HandleFunc("/api/v1/vms/", s.vmRoutes)
 	mux.HandleFunc("/api/v1/storage/volumes/", s.volumeRoutes)
 	mux.HandleFunc("/api/v1/hosts/", s.hostRoutes)
+	if s.staticDir != "" {
+		mux.HandleFunc("/", s.serveSPA)
+	}
 	return withCORS(logging(mux))
 }
 
@@ -145,6 +151,32 @@ func (s *Server) hostRoutes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, host)
+}
+
+func (s *Server) serveSPA(w http.ResponseWriter, r *http.Request) {
+	if strings.HasPrefix(r.URL.Path, "/api/") {
+		http.NotFound(w, r)
+		return
+	}
+
+	relPath := filepath.Clean(strings.TrimPrefix(r.URL.Path, "/"))
+	if relPath == "." {
+		relPath = "index.html"
+	}
+
+	candidate := filepath.Join(s.staticDir, relPath)
+	if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+		http.ServeFile(w, r, candidate)
+		return
+	}
+
+	indexPath := filepath.Join(s.staticDir, "index.html")
+	if _, err := os.Stat(indexPath); err == nil {
+		http.ServeFile(w, r, indexPath)
+		return
+	}
+
+	http.NotFound(w, r)
 }
 
 func writeJSON(w http.ResponseWriter, code int, data any) {

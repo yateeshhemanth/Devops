@@ -11,7 +11,7 @@ import (
 )
 
 func TestDashboardAndOps(t *testing.T) {
-	srv := New(store.New())
+	srv := New(store.New(), "")
 	h := srv.Router()
 
 	t.Run("dashboard", func(t *testing.T) {

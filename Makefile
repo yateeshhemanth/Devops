@@ -1,4 +1,4 @@
-.PHONY: test-backend build-backend run-backend smoke-backend deploy-local
+.PHONY: test-backend build-backend run-backend smoke-backend deploy-local kvm-preflight package-release
 
 test-backend:
 	cd backend && go test ./...
@@ -14,3 +14,9 @@ smoke-backend:
 
 deploy-local:
 	bash deploy/scripts/deploy_local.sh
+
+kvm-preflight:
+	bash deploy/scripts/preflight_kvm.sh
+
+package-release:
+	bash deploy/scripts/package_release.sh

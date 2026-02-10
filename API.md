@@ -38,7 +38,24 @@ This command builds the Go backend, starts it in the background, and runs smoke 
 make smoke-backend
 ```
 
+### KVM readiness checks
+```bash
+make kvm-preflight
+```
+
+### Build KVM release bundle
+```bash
+make package-release
+```
+
 ### Kubernetes deployment
 ```bash
 kubectl apply -f deploy/kubernetes/backend-deployment.yaml
 ```
+
+### One-container hosting (UI + API)
+```bash
+docker build -t kvm-platform:latest .
+docker run --rm -p 8080:8080 kvm-platform:latest
+```
+Open `http://localhost:8080`.
