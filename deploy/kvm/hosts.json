@@ -1,0 +1,18 @@
+[
+  {
+    "id": "host-153",
+    "name": "kvm-host-153",
+    "address": "192.168.1.153",
+    "cpuCapacity": 64,
+    "ramCapacityGb": 256,
+    "state": "ready"
+  },
+  {
+    "id": "host-154",
+    "name": "kvm-host-154",
+    "address": "192.168.1.154",
+    "cpuCapacity": 64,
+    "ramCapacityGb": 256,
+    "state": "ready"
+  }
+]
