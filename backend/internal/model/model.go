@@ -50,7 +50,6 @@ type NetworkSegment struct {
 type Host struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
-	Address     string `json:"address,omitempty"`
 	CPUCapacity int    `json:"cpuCapacity"`
 	RAMCapacity int    `json:"ramCapacityGb"`
 	Maintenance bool   `json:"maintenance"`

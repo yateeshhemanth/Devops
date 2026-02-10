@@ -18,30 +18,6 @@ type Store struct {
 }
 
 func New() *Store {
-	return NewWithHosts(nil)
-}
-
-func NewWithHosts(hostList []model.Host) *Store {
-	hosts := map[string]model.Host{
-		"host-1": {ID: "host-1", Name: "kvm-host-01", Address: "10.0.10.11", CPUCapacity: 96, RAMCapacity: 512, State: "ready"},
-		"host-2": {ID: "host-2", Name: "kvm-host-03", Address: "10.0.10.12", CPUCapacity: 64, RAMCapacity: 256, State: "ready"},
-		"host-3": {ID: "host-3", Name: "kvm-host-04", Address: "10.0.10.13", CPUCapacity: 64, RAMCapacity: 256, State: "ready"},
-	}
-
-	if len(hostList) > 0 {
-		hosts = make(map[string]model.Host, len(hostList))
-		for _, host := range hostList {
-			h := host
-			if h.ID == "" {
-				h.ID = h.Name
-			}
-			if h.State == "" {
-				h.State = "ready"
-			}
-			hosts[h.ID] = h
-		}
-	}
-
 	return &Store{
 		vms: map[string]model.VM{
 			"vm-1": {ID: "vm-1", Name: "payment-api-01", VCPU: 8, MemoryGB: 32, StorageGB: 500, Network: "prod-app-net", Status: model.VMRunning, Host: "kvm-host-03", SnapshotCnt: 4, LastBackupAt: time.Now().Add(-6 * time.Hour).Format(time.RFC3339)},
@@ -58,7 +34,11 @@ func NewWithHosts(hostList []model.Host) *Store {
 			"net-2": {ID: "net-2", Name: "prod-db-net", CIDR: "10.40.20.0/24", VLAN: 220, ProtectedBy: "sg-db"},
 			"net-3": {ID: "net-3", Name: "batch-net", CIDR: "10.40.30.0/24", VLAN: 230, ProtectedBy: "sg-batch"},
 		},
-		hosts:  hosts,
+		hosts: map[string]model.Host{
+			"host-1": {ID: "host-1", Name: "kvm-host-01", CPUCapacity: 96, RAMCapacity: 512, State: "ready"},
+			"host-2": {ID: "host-2", Name: "kvm-host-03", CPUCapacity: 64, RAMCapacity: 256, State: "ready"},
+			"host-3": {ID: "host-3", Name: "kvm-host-04", CPUCapacity: 64, RAMCapacity: 256, State: "ready"},
+		},
 		alerts: []model.Alert{{ID: "a-1", Severity: "warning", Message: "Host kvm-host-04 reports high memory pressure (82%)."}},
 	}
 }
@@ -96,9 +76,6 @@ func (s *Store) MigrateVM(vmID, host string) (model.VM, error) {
 	vm, ok := s.vms[vmID]
 	if !ok {
 		return model.VM{}, fmt.Errorf("vm %s not found", vmID)
-	}
-	if !s.hostExists(host) {
-		return model.VM{}, fmt.Errorf("target host %s not found", host)
 	}
 	vm.Status = model.VMMigrating
 	vm.Host = host
@@ -158,13 +135,4 @@ func mapValues[T any](m map[string]T) []T {
 		res = append(res, v)
 	}
 	return res
-}
-
-func (s *Store) hostExists(host string) bool {
-	for _, h := range s.hosts {
-		if h.ID == host || h.Name == host || h.Address == host {
-			return true
-		}
-	}
-	return false
 }

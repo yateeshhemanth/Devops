@@ -11,13 +11,6 @@ This repo includes:
 
 ## Features
 
-Production baseline included now:
-- API key auth + RBAC (viewer/operator/admin)
-- readiness endpoint (`/readyz`)
-- request ID + audit logs + panic recovery
-- per-IP rate limiting
-- graceful shutdown on SIGTERM/SIGINT
-
 ### Day-2 operations
 - VM power actions: start/stop/reboot/pause
 - VM snapshot and migration
@@ -97,29 +90,13 @@ Base URL: `http://localhost:8080`
 
 See: `API.md`.
 
-When auth is enabled (`API_KEYS`), pass `X-API-Key` in all API requests.
-
 ---
 
 ## Deploy to KVM environment
 
-For exact command-by-command steps for your topology, see **`DEPLOYMENT_RUNBOOK.md`**.
-
-
-Recommended topology for your case:
-- `192.168.1.160` = dashboard/API server
-- `192.168.1.153` = KVM host 1
-- `192.168.1.154` = KVM host 2
-
-
 ### 1) Host preflight
 ```bash
-MODE=dashboard make kvm-preflight
-```
-
-On each hypervisor host run:
-```bash
-MODE=host make kvm-preflight
+make kvm-preflight
 ```
 
 Checks:
@@ -145,8 +122,6 @@ Follow `deploy/kvm/README.md`:
 ### 4) Optional automation
 Use Ansible playbook:
 - `deploy/kvm/ansible/site.yml`
-- edit `deploy/kvm/hosts.json` to list your real host IPs
-- runbook reference: `DEPLOYMENT_RUNBOOK.md`
 
 ---
 

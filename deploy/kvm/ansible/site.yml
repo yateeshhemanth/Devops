@@ -1,15 +1,18 @@
 ---
-- name: Prepare KVM hypervisor hosts
-  hosts: kvm_hosts
+- name: Configure KVM node and deploy platform
+  hosts: kvm_nodes
   become: true
+  vars:
+    release_archive: /tmp/kvm-platform.tar.gz
+    install_dir: /opt/kvm-platform
   tasks:
-    - name: Install required hypervisor packages
+    - name: Install required packages
       apt:
         name:
           - qemu-kvm
           - libvirt-daemon-system
           - libvirt-clients
-          - bridge-utils
+          - nginx
         state: present
         update_cache: true
 
@@ -19,38 +22,15 @@
         state: started
         enabled: true
 
-- name: Deploy dashboard server on .160
-  hosts: dashboard
-  become: true
-  vars:
-    release_archive: /tmp/kvm-platform.tar.gz
-    install_dir: /opt/kvm-platform
-  tasks:
-    - name: Install dashboard packages
-      apt:
-        name:
-          - nginx
-          - curl
-        state: present
-        update_cache: true
-
-    - name: Create install + config directories
+    - name: Create install directory
       file:
-        path: "{{ item }}"
+        path: "{{ install_dir }}"
         state: directory
-      loop:
-        - "{{ install_dir }}"
-        - "{{ install_dir }}/config"
 
     - name: Upload release archive
       copy:
         src: "{{ release_archive }}"
         dest: /tmp/kvm-platform.tar.gz
-
-    - name: Upload KVM hosts inventory
-      copy:
-        src: ../hosts.json
-        dest: "{{ install_dir }}/config/hosts.json"
 
     - name: Extract release
       unarchive:

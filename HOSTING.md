@@ -22,8 +22,6 @@ make package-release
 ```
 Then follow `deploy/kvm/README.md` to install service files and nginx.
 
-Use `deploy/kvm/hosts.json` for your host inventory (e.g., .153 and .154) and run dashboard on .160 with `HOSTS_FILE=/opt/kvm-platform/config/hosts.json`.
-
 ## Deploy on Render
 1. Push this repo to GitHub.
 2. In Render, create **New Web Service** from repo.

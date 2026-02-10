@@ -4,7 +4,6 @@ Base URL: `http://localhost:8080`
 
 ## Health
 - `GET /healthz`
-- `GET /readyz`
 
 ## Dashboard
 - `GET /api/v1/dashboard`
@@ -60,13 +59,3 @@ docker build -t kvm-platform:latest .
 docker run --rm -p 8080:8080 kvm-platform:latest
 ```
 Open `http://localhost:8080`.
-
-For multi-host KVM setup set:
-- `HOSTS_FILE=/opt/kvm-platform/config/hosts.json` (dashboard .160 loads .153/.154 inventory).
-
-
-## Auth/RBAC (production baseline)
-- Set `API_KEYS` env as comma-separated `token:role` pairs.
-- Roles: `viewer`, `operator`, `admin`.
-- Send key in header: `X-API-Key: <token>`.
-- If `API_KEYS` is empty, auth is disabled (dev mode).

@@ -8,7 +8,6 @@ export function HostTable({ hosts, onToggleMaintenance }: { hosts: Host[]; onTog
         <thead>
           <tr>
             <th>Name</th>
-            <th>Address</th>
             <th>CPU</th>
             <th>RAM</th>
             <th>State</th>
@@ -20,7 +19,6 @@ export function HostTable({ hosts, onToggleMaintenance }: { hosts: Host[]; onTog
           {hosts.map((host) => (
             <tr key={host.id}>
               <td>{host.name}</td>
-              <td>{host.address ?? "n/a"}</td>
               <td>{host.cpuCapacity}</td>
               <td>{host.ramCapacityGb} GB</td>
               <td>{host.state}</td>

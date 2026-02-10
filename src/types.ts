@@ -33,7 +33,6 @@ export interface NetworkSegment {
 export interface Host {
   id: string;
   name: string;
-  address?: string;
   cpuCapacity: number;
   ramCapacityGb: number;
   maintenance: boolean;

@@ -9,14 +9,9 @@ This directory includes everything required to deploy the platform in a KVM-base
 - `cloud-init/kvm-node-user-data.yaml` bootstrap template for new KVM VMs.
 
 ## 1) Host prerequisites
-For dashboard node (.160):
+Run:
 ```bash
-MODE=dashboard bash deploy/scripts/preflight_kvm.sh
-```
-
-For each KVM host (.153/.154):
-```bash
-MODE=host bash deploy/scripts/preflight_kvm.sh
+bash deploy/scripts/preflight_kvm.sh
 ```
 
 Checks include:
@@ -54,11 +49,3 @@ curl -fsS http://<host>/api/v1/dashboard
 
 ## 5) Optional automation (Ansible)
 Use `deploy/kvm/ansible/site.yml` with your inventory to configure hosts end-to-end.
-
-Topology template is prefilled in:
-- `deploy/kvm/ansible/inventory.ini`
-- `deploy/kvm/hosts.json`
-
-
-## Runbook
-For a full end-to-end deployment with `.160` dashboard and `.153/.154` KVM hosts, see `DEPLOYMENT_RUNBOOK.md` in repo root.
